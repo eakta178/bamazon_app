@@ -59,9 +59,12 @@ function start() {
         console.log("Id: " + results[i].id + " || Product Name: " + results[i].product_name 
         + " || Price of the product: " + results[i].price + " || Quantity of the product: " + results[i].stock_quantity);
       }
-     
+      start();
   }
-  )};
+
+  )
+  
+};
 
 // If a manager selects View Low Inventory, then it should list all items with an inventory count lower 
 // than five.
@@ -76,10 +79,16 @@ function viewLowInventory(){
             + " || Price of the product: " + results[i].price + " || Quantity of the product: " + results[i].stock_quantity);
           
             }
+        else{
+            console.log("There is no product low in inventory");
         }
-     
+        }
+        start();
   }
-  )};
+    
+  )
+  
+};
 
 // If a manager selects Add to Inventory, your app should display a prompt that will let the manager 
 // "add more" of any item currently in the store.
@@ -90,7 +99,7 @@ function addInventory(){
       .prompt([
         {
           name: "choice",
-          type: "rawlist",
+          type: "list",
           choices: function() {
             var choiceArray = [];
             for (var i = 0; i < results.length; i++) {
@@ -103,7 +112,13 @@ function addInventory(){
         {
           name: "unit",
           type: "input",
-          message: "How many units you would you like to add?"
+          message: "How many units you would you like to add?",
+          validate: function(value) {
+            if (isNaN(value) === false) {
+              return true;
+            }
+            return false;
+          }
         }
       ])
       .then(function(answer) {
@@ -118,7 +133,7 @@ function addInventory(){
             "UPDATE products SET ? WHERE ?",
             [
               {
-                stock_quantity: chosenItem.stock_quantity + answer.unit
+                stock_quantity: chosenItem.stock_quantity + parseInt(answer.unit)
               },
               {
                 id: chosenItem.id
@@ -181,8 +196,8 @@ function addProduct(){
         {
             product_name: answer.name,
             department_name: answer.department,
-            stock_quantity: answer.stock,
-            price: answer.price
+            stock_quantity: parseInt(answer.stock),
+            price: parseInt(answer.price)
         },
         function(err) {
           if (err) throw err;
