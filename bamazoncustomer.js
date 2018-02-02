@@ -38,51 +38,52 @@ connection.connect(function(err) {
         
         })
       .then(function(answer) {
-        checkStock();
+        checkStock(answer);
       
-
       });
   }
 
-  function checkStock(){
-// Once the customer has placed the order, your application should check if your store has enough of 
-// the product to meet the customer's request.
-    connection.query("SELECT * FROM products", function(err, results) {
-      if (err) throw err;
-    if (parseInt(answer.units) < results.stock_quantity) {
-      // However, if your store does have enough of the product, you should fulfill the customer's order.
-      // This means updating the SQL database to reflect the remaining quantity.
-      var newStockQuantity = results.stock_quantity - answer.units;
-      var costOfPurchase = parseInt(answer.units)*results.price;
-      connection.query(
-        "UPDATE products SET ? WHERE ?",
-        [
-          {
-            stock_quantity: newStockQuantity
-          },
-          {
-            id: answer.id
-          }
-        ],
-        function(error) {
-          if (error) throw err;
-          console.log("Order placed successfully!");
-          // Once the update goes through, show the customer the total cost of their purchase.
-          console.log("Order Placed successfully"+"/n Your total cost of purchase is: "+ costOfPurchase);
+  function checkStock(answer){
+    // Once the customer has placed the order, your application should check if your store has enough of 
+    // the product to meet the customer's request.
+        connection.query("SELECT * FROM products WHERE ?",
+        [{id: answer.id}],
+        function(err, results) {
+          if (err) throw err;
+        if (parseInt(answer.units) < results.stock_quantity) {
+          // However, if your store does have enough of the product, you should fulfill the customer's order.
+          // This means updating the SQL database to reflect the remaining quantity.
+          var newStockQuantity = results.stock_quantity - answer.units;
+          var costOfPurchase = parseInt(answer.units)*results.price;
+          connection.query(
+            "UPDATE products SET ? WHERE ?",
+            [
+              {
+                stock_quantity: newStockQuantity
+              },
+              {
+                id: answer.id
+              }
+            ],
+            function(error) {
+              if (error) throw err;
+              console.log("Order placed successfully!");
+              // Once the update goes through, show the customer the total cost of their purchase.
+              console.log("Order Placed successfully"+"/n Your total cost of purchase is: "+ costOfPurchase);
 
+              start();
+            }
+          );
+        }
+        // If not, the app should log a phrase like Insufficient quantity!, and then prevent the order from 
+        // going through.
+        else {
+          
+          console.log("Our stocks are too low for this order. Please Try again later...");
           start();
         }
-      );
-    }
-    // If not, the app should log a phrase like Insufficient quantity!, and then prevent the order from 
-    // going through.
-    else {
-      
-      console.log("Our stocks are too low for this order. Please Try again later...");
-      start();
-    }
-  })
-};
+      })
+    };
 
 //Running this application will first display all of the items available for sale. Include the ids, names, and 
 // prices of products for sale.

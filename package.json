@@ -1,0 +1,24 @@
+{
+  "name": "bamazon_app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "bamazonManager.js",
+  "dependencies": {
+    "inquirer": "^5.0.1",
+    "mysql": "^2.15.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eakta178/bamazon_app.git"
+  },
+  "author": "Eakta",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eakta178/bamazon_app/issues"
+  },
+  "homepage": "https://github.com/eakta178/bamazon_app#readme"
+}
