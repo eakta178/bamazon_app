@@ -23,14 +23,23 @@ connection.connect(function(err) {
   // function which prompts the user for what action they should take
   // The first should ask them the ID of the product they would like to buy.
   // The second message should ask how many units of the product they would like to buy.
+  
   function start() {
+    connection.query("SELECT * FROM products ",
+    function(err, results) {
     inquirer
       .prompt({
         name: "id",
         type: "rawlist",
-        message: "Please select the id of the product you would like to buy!",
-        choices: [1,2,3,4,5,6,7,8,9,10]
-            },
+        choices: function() {
+          var choiceArray = [];
+          for (var i = 0; i < results.length; i++) {
+            choiceArray.push(results[i].id);
+          }
+          return choiceArray;
+          },
+        message: "Please select the id of the product you would like to buy!"
+        },
         {
         name: "units",
         type: "input",
@@ -40,8 +49,12 @@ connection.connect(function(err) {
       .then(function(answer) {
         checkStock(answer);
       
-      });
-  }
+      })
+      .catch((error) => {
+        console.log(error)
+      });;
+  })
+};
 
   function checkStock(answer){
     // Once the customer has placed the order, your application should check if your store has enough of 
